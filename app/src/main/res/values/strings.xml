@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Inventory App</string>
+    <string name="empty_view_title_text">All about them Items</string>
+    <string name="empty_view_subtitle_text">Add Items, Common...</string>
+    <string name="hint_item_name">Name</string>
+    <string name="hint_item_price">Price</string>
+    <string name="price">Price ($)</string>
+    <string name="hint_name_price">Input Product Name Here</string>
+    <string name="delete_dialog_msg">Delete This Item?</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="action_insert_dummy_data">Insert Dummy Data</string>
+    <string name="action_delete_all_entries">Delete All Pets</string>
+    <string name="action_save">save</string>
+    <string name="action_delete">Delete</string>
+    <string name="unknown_supplier">Unknown Supplier</string>
+</resources>

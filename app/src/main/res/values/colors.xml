@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#4682b4</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#C0403C</color>
+    <color name="bold">#C0403C</color>
+    <color name="titles">#8E4585</color>
+    <color name="wheat">#F5DEB3</color>
+    <color name="plum">#8E4585</color>
+    <color name="pea">#78AB46</color>
+</resources>

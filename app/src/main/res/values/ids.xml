@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="action_insert_dummy_data" type="id">Insert Dummy Data</item>
+    <item name="action_delete_all_entries" type="id">Delete All</item>
+</resources>
