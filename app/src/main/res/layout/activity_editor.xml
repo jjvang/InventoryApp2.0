@@ -12,22 +12,22 @@
         android:orientation="vertical">
 
         <ImageView
+            android:id="@+id/itemImage"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="2"
-            android:src="@drawable/photo"
-            android:id="@+id/imageView" />
+            android:src="@drawable/photo" />
 
         <TextView
+            android:id="@+id/chooseImage"
             android:layout_width="match_parent"
-            android:textAlignment="center"
             android:layout_height="wrap_content"
-            android:text="Choose Image"
             android:background="@color/bold"
             android:padding="10dp"
-            android:id="@+id/textView"
+            android:text="Choose Image"
+            android:textAlignment="center"
             android:textColor="@android:color/white"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -54,6 +54,7 @@
 
             <!-- Breed field -->
             <EditText
+                android:id="@+id/inputName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
@@ -88,14 +89,14 @@
 
             <!-- Breed field -->
             <EditText
+                android:id="@+id/inputPrice"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
                 android:hint="Input Price of Product"
                 android:inputType="numberDecimal"
                 android:textAppearance="?android:textAppearanceMedium"
-                android:textColor="@color/bold"
-                android:id="@+id/editText2" />
+                android:textColor="@color/bold" />
 
         </LinearLayout>
     </LinearLayout>
@@ -124,14 +125,14 @@
 
             <!-- Breed field -->
             <EditText
+                android:id="@+id/inputSupplier"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
                 android:hint="Input Supplier Name"
                 android:inputType="textCapWords"
                 android:textAppearance="?android:textAppearanceMedium"
-                android:textColor="@color/bold"
-                android:id="@+id/editText" />
+                android:textColor="@color/bold" />
 
         </LinearLayout>
     </LinearLayout>
@@ -145,10 +146,10 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="horizontal"
+            android:layout_marginBottom="4dp"
             android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp">
+            android:layout_weight="1"
+            android:orientation="horizontal">
 
             <!-- Name field -->
             <TextView
@@ -160,15 +161,33 @@
                 android:textColor="@color/bold"
                 android:textStyle="bold" />
 
-            <!-- Breed field -->
-            <TextView
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="4"
-                android:hint=" Add to Quantity From Below"
-                android:inputType="textCapWords"
-                android:textAppearance="?android:textAppearanceMedium"
-                android:textColor="@color/bold" />
+                android:layout_weight="4">
+
+                <Button
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:onClick="increment"
+                    android:text="+" />
+
+                <TextView
+                    android:id="@+id/quantity_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:layout_marginLeft="8sp"
+                    android:layout_marginRight="8sp"
+                    android:text="1" />
+
+                <Button
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:onClick="decrement"
+                    android:text="-" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
 
@@ -179,49 +198,57 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Button
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginBottom="8sp"
-            android:onClick="increment"
-            android:text="+" />
-
-        <TextView
-            android:id="@+id/quantity_text_view"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginLeft="8sp"
-            android:layout_marginRight="8sp"
-            android:text="1" />
-
-        <Button
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:onClick="decrement"
-            android:text="-" />
-
         <EditText
-            android:layout_width="wrap_content"
+            android:id="@+id/inputQuantity"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:hint="Manual Input"
+            android:layout_weight="1.5"
+            android:hint="Input Quantity"
             android:inputType="number"
             android:textAppearance="?android:textAppearanceMedium"
             android:textColor="@color/bold" />
 
-        <TextView
+        <FrameLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Add to Quantity"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:layout_marginTop="6dp"
+            android:background="?attr/selectableItemBackground">
+
+            <TextView
+                android:id="@+id/addQuantity"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="6dp"
+                android:background="@color/pea"
+                android:gravity="center_vertical"
+                android:text="Add"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground">
+        <TextView
+            android:id="@+id/subQuantity"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginBottom="12dp"
             android:layout_marginLeft="12dp"
+            android:layout_marginTop="6dp"
             android:background="@color/pea"
+            android:gravity="center_vertical"
+            android:text="Sub"
             android:textAlignment="center"
-            android:gravity="center_vertical"/>
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+        </FrameLayout>
 
     </LinearLayout>
 
@@ -231,34 +258,32 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:text="Sales"
-        android:background="@color/plum"
-        android:padding="10dp"
-        android:layout_marginRight="4dp"
-        android:textColor="@android:color/white"
-        android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/salesButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="4dp"
+            android:layout_weight="1"
+            android:background="@color/plum"
+            android:padding="10dp"
+            android:text="Sales"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
 
-    <TextView
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:textAlignment="center"
-        android:background="@color/colorAccent"
-        android:text="Order Shipment"
-        android:padding="10dp"
-        android:layout_marginLeft="4dp"
-        android:textColor="@android:color/white"
-        android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/orderShipment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_weight="1"
+            android:background="@color/colorAccent"
+            android:padding="10dp"
+            android:text="Order Shipment"
+            android:textAlignment="center"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
     </LinearLayout>
-
-
-
-
 
 
 </LinearLayout>

@@ -14,4 +14,6 @@
     <string name="action_save">save</string>
     <string name="action_delete">Delete</string>
     <string name="unknown_supplier">Unknown Supplier</string>
+    <string name="editor_activity_title_new_product">Add a Product</string>
+    <string name="editor_activity_title_edit_product">Edit the Product</string>
 </resources>
