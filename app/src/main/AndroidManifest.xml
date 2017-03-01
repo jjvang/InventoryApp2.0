@@ -2,10 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.ojboba.inventoryapp">
 
+    <!--allows app to use camera-->
+    <!--only works when the phone has a camera which is true most the time-->
     <uses-feature android:name="android.hardware.camera"
         android:required="true" />
 
     <!--allows to save full size photos-->
+    <!--<uses-permission android:name="android.permission.CAMERA"/>-->
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 

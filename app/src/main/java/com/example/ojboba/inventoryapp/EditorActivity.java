@@ -3,15 +3,13 @@ package com.example.ojboba.inventoryapp;
 import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -73,6 +71,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     static final int REQUEST_TAKE_PHOTO = 1;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
+
 
 
     /** Boolean flag that keeps track of whether the product has been edited (true) or not (false) */
@@ -214,36 +213,41 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
 
     }
-
-//    private void dispatchTakePictureIntent() {
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-//        }
-//    }
+//-----------------------------TAKE PHOTO WITH THE CAMERA APP---------------------------------------
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the Fi
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.android.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
+//------------------------ADVANCE WAY TO TAKE PHOTO WITH THE CAMERA APP-----------------------------
+//    private void dispatchTakePictureIntent() {
+//        // MediaStore is database to where images are stored and linked, a type of content provider
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        // Ensure that there's a camera activity to handle the intent
+//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//            // Create the File where the photo should go
+//            File photoFile = null;
+//            try {
+//                photoFile = createImageFile();
+//            } catch (IOException ex) {
+//                // Error occurred while creating the Fi
+//                Toast.makeText(getApplicationContext(), "Something Wrong While Taking Photos", Toast.LENGTH_SHORT).show();
+//            }
+//            // Continue only if the File was successfully created
+//            if (photoFile != null) {
+//                Uri photoURI = FileProvider.getUriForFile(this,
+//                        "com.example.android.fileprovider",
+//                        photoFile);
+//                // photo is to be stored at the photoURI
+//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI).putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+//                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+//            }
+//        }
+//    }
 
+//---------------------------SAVE PHOTO WITH UNIQUE TIME STAMP--------------------------------------
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -259,35 +263,19 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        if(requestCode == REQUEST_CODE_GALLERY){
-            if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                Intent intent = new Intent(Intent.ACTION_PICK);
-                intent.setType("image/*");
-                startActivityForResult(intent, REQUEST_CODE_GALLERY);
-            }
-            else {
-                Toast.makeText(getApplicationContext(), "You don't have permission to access file location!", Toast.LENGTH_SHORT).show();
-            }
-            return;
-        }
-
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
+//----------------------Retrieves data and displays it to an ImageView------------------------------
+    // This override method is the results you get from the camera when you take the photo
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null) {
+            // Bundle returns the value associated with the given key, in this case the image Intent URI
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             productImage.setImageBitmap(imageBitmap);
         }
 
-//        if(requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK && data != null){
+//        else if(requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK && data != null){
 //            Uri uri = data.getData();
 //
 //            try {
@@ -303,9 +291,47 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 //
 //        super.onActivityResult(requestCode, resultCode, data);
     }
+//-----------------------------ADD THE PHOTO TO A GALLERY-------------------------------------------
+//    The following example method demonstrates how to invoke the system's media scanner to add your
+//    photo to the Media Provider's database, making it available in the Android Gallery application
+//    and to other apps.
+
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mCurrentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
+    }
+
+//-----------------------------DECODE A SCALED IMAGE------------------------------------------------
+    private void setPic() {
+        // Get the dimensions of the View
+        int targetW = productImage.getWidth();
+        int targetH = productImage.getHeight();
+
+        // Get the dimensions of the bitmap
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+        // Determine how much to scale down the image
+        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+
+        // Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        productImage.setImageBitmap(bitmap);
+    }
 
 
 
+//-----------------------------ORDER SHIPMENT INTENT------------------------------------------------
     private String createOrderSummary(EditText mNameEditText, int quantity, int calculatePrice){
         String intentMessage = "Name:" + mNameEditText;
         intentMessage += "\nQuantity: " + quantity;
@@ -313,7 +339,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         intentMessage = intentMessage + "\nThank You!";
         return intentMessage;
     }
-
+//-----------------------------ADD TO QUANTITY BUTTON-----------------------------------------------
     public void increment (View view){
         if (quantity == 100){
             // Gives error message to user
@@ -324,6 +350,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         quantity = quantity +1;
         displayQuantity(quantity);
     }
+//-----------------------------SUBTRACT TO QUANTITY BUTTON------------------------------------------
     public void decrement (View view) {
         if (quantity == 0){
             // Gives error message to user
@@ -334,7 +361,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         quantity = quantity - 1;
         displayQuantity(quantity);
     }
-
+//---------------------------DISPLAY NEW QUANTITY METHOD--------------------------------------------
     private void displayQuantity(int number) {
         mQuantityTextView = (TextView) findViewById(R.id.quantity_text_view);
         mQuantityTextView.setText("" + number);
