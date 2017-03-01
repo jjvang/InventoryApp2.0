@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements
         });
 
         // NOt sure the error here, the "this" isn't working as planned
-        getLoaderManager().initLoader(INVENTORY_LOADER, null, this);
+        getSupportLoaderManager().initLoader(INVENTORY_LOADER, null, this);
 
     }
 

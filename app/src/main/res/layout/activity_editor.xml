@@ -258,26 +258,24 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/salesButton"
+        <EditText
+            android:id="@+id/inputShipmentQuantity"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="4dp"
+            android:layout_marginLeft="4dp"
             android:layout_weight="1"
-            android:background="@color/plum"
-            android:padding="10dp"
-            android:text="Sales"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
-            android:textStyle="bold" />
+            android:hint="Shipment Quantity"
+            android:inputType="number"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@color/bold" />
 
         <TextView
             android:id="@+id/orderShipment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="4dp"
-            android:layout_weight="1"
-            android:background="@color/colorAccent"
+            android:layout_weight="1.5"
+            android:background="@color/plum"
             android:padding="10dp"
             android:text="Order Shipment"
             android:textAlignment="center"

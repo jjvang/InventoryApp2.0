@@ -16,4 +16,13 @@
     <string name="unknown_supplier">Unknown Supplier</string>
     <string name="editor_activity_title_new_product">Add a Product</string>
     <string name="editor_activity_title_edit_product">Edit the Product</string>
+    <string name="editor_insert_item_failed">Error Saving Item</string>
+    <string name="editor_insert_item_successful">Saved Item</string>
+    <string name="editor_update_item_failed">Update Item Failed</string>
+    <string name="editor_update_item_successful">Item Updated</string>
+    <string name="unsaved_changes_dialog_msg">Discard your changes and quit editing?</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep Editing</string>
+    <string name="editor_delete_item_failed">Error when deleting</string>
+    <string name="editor_delete_item_successful">Item Deleted</string>
 </resources>
