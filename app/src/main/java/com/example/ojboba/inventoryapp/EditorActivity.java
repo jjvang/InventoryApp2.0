@@ -44,7 +44,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     int quantity = 1;
     int inputQuantity = 0;
-    int calculatePrice = 0;
+    float calculatePrice = 0;
     final int REQUEST_CODE_GALLERY = 999;
 
     /** Content URI for the existing inventory (null if it's a new inventory) */
@@ -268,12 +268,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             }
         });
 
-
-
     }
+
 //-----------------------------TAKE PHOTO WITH THE CAMERA APP---------------------------------------
 
-    private void dispatchTakePictureIntent() {
+    public void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -305,7 +304,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 //        }
 //    }
 
-//---------------------------SAVE PHOTO WITH UNIQUE TIME STAMP--------------------------------------
+    //---------------------------SAVE PHOTO WITH UNIQUE TIME STAMP--------------------------------------
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -321,7 +320,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
-//----------------------Retrieves data and displays it to an ImageView------------------------------
+    //----------------------Retrieves data and displays it to an ImageView------------------------------
     // This override method is the results you get from the camera when you take the photo
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -362,7 +361,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         this.sendBroadcast(mediaScanIntent);
     }
 
-//-----------------------------DECODE A SCALED IMAGE------------------------------------------------
+    //-----------------------------DECODE A SCALED IMAGE------------------------------------------------
     private void setPic() {
         // Get the dimensions of the View
         int targetW = productImage.getWidth();
@@ -386,11 +385,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
         productImage.setImageBitmap(bitmap);
     }
-
-
-
 //-----------------------------ORDER SHIPMENT INTENT------------------------------------------------
-    private String createOrderSummary(EditText name, EditText quantity, int calculatePrice){
+    private String createOrderSummary(EditText name, EditText quantity, float calculatePrice){
         String intentMessage = "Name:" + name.getText().toString();
         intentMessage += "\nQuantity: " + quantity.getText().toString();
         intentMessage = intentMessage + "\nTotal: $" + calculatePrice;
@@ -524,11 +520,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // If the weight is not provided by the user, don't try to parse the string into an
         // integer value. Use 0 by default.
         // This also helps the app not crash because it cannot convert a blank space into an integer
-        int weight = 0;
+        int defaultPrice = 0;
+//        float defaultPrice = 0;
         if (!TextUtils.isEmpty(priceString)) {
-            weight = Integer.parseInt(priceString);
+            defaultPrice = Integer.parseInt(priceString);
         }
-        values.put(InventoryEntry.COLUMN_INVENTORY_PRICE, weight);
+        values.put(InventoryEntry.COLUMN_INVENTORY_PRICE, defaultPrice);
 
         // Determine if this is a new or existing pet by checking if mCurrentPetUri is null or not
         if (mCurrentProductUri == null) {
@@ -711,13 +708,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 String name = cursor.getString(nameColumnIndex);
                 String supplier = cursor.getString(supplierColumnIndex);
                 int price = cursor.getInt(priceColumnIndex);
+//                float price = cursor.getFloat(priceColumnIndex);
                 int quantity = cursor.getInt(quantityColumnIndex);
 
                 // Update the views on the screen with the values from the database
                 mNameEditText.setText(name);
                 mSupplierEditText.setText(supplier);
-                mPriceEditText.setText(Integer.toString(price));
-                mQuantityTextView.setText(Integer.toString(quantity));
+                mPriceEditText.setText("" + price);
+//                mQuantityTextView.setText("" + quantity);
 
             }
         }
@@ -731,7 +729,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mSupplierEditText.setText("");
         mQuantityEditText.setText("");
         mShipmentQuantity.setText("");
-        mQuantityTextView.setText(Integer.toString(1));
+//        mQuantityTextView.setText("" + 1);
     }
 
 

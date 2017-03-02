@@ -54,18 +54,18 @@ public class MainActivity extends AppCompatActivity implements
         });
 
         // Create list view
-        ListView habitListView = (ListView) findViewById(R.id.list);
+        ListView inventoryListView = (ListView) findViewById(R.id.list);
 
         // Initialize Empty View, set it into the list view when there is no list
         View emptyView = findViewById(R.id.empty_view);
-        habitListView.setEmptyView(emptyView);
+        inventoryListView.setEmptyView(emptyView);
 
         // Setup the Cursor Adapter to set the List View for each Cursor data
         mCursorAdapter = new InventoryCursorAdapter(this, null);
-        habitListView.setAdapter(mCursorAdapter);
+        inventoryListView.setAdapter(mCursorAdapter);
 
         // Setup onClickListener so when clicked it will send intent to edit
-        habitListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        inventoryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Create Intent When item is clicked
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements
         // and Raspberry's inventories attributes are the values.
         ContentValues values = new ContentValues();
         values.put(InventoryEntry.COLUMN_INVENTORY_NAME, "Raspberry");
-        values.put(InventoryEntry.COLUMN_INVENTORY_PRICE, 12);
+        values.put(InventoryEntry.COLUMN_INVENTORY_PRICE, 1);
         values.put(InventoryEntry.COLUMN_INVENTORY_SUPPLIER, "Amazon");
         values.put(InventoryEntry.COLUMN_INVENTORY_QUANTITY, 1);
 

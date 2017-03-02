@@ -192,6 +192,15 @@ public class InventoryProvider extends ContentProvider{
             }
         }
 
+        // If the {@link InventoryEntry#COLUMN_INVENTORY_SUPPLIER} key is present,
+        // check that the supplier value is valid.
+        if (values.containsKey(InventoryEntry.COLUMN_INVENTORY_SUPPLIER)) {
+            String supplier = values.getAsString(InventoryEntry.COLUMN_INVENTORY_SUPPLIER);
+            if (supplier == null) {
+                throw new IllegalArgumentException("Item requires supplier information");
+            }
+        }
+
         // If the {@link InventoryEntry#COLUMN_INVENTORY_PRICE} key is present,
         // check that the price value is valid.
         if (values.containsKey(InventoryEntry.COLUMN_INVENTORY_PRICE)) {
@@ -204,14 +213,6 @@ public class InventoryProvider extends ContentProvider{
             }
         }
 
-        // If the {@link InventoryEntry#COLUMN_INVENTORY_SUPPLIER} key is present,
-        // check that the supplier value is valid.
-        if (values.containsKey(InventoryEntry.COLUMN_INVENTORY_SUPPLIER)) {
-            Integer supplier = values.getAsInteger(InventoryEntry.COLUMN_INVENTORY_SUPPLIER);
-            if (supplier == null) {
-                throw new IllegalArgumentException("Item requires supplier information");
-            }
-        }
 
         // If the {@link InventoryEntry#COLUMN_INVENTORY_QUANTITY} key is present,
         // check that the quantity value is valid.
@@ -325,7 +326,7 @@ public class InventoryProvider extends ContentProvider{
 
 
         // Check that the supplier is valid
-        Integer supplier = values.getAsInteger(InventoryEntry.COLUMN_INVENTORY_SUPPLIER);
+        String supplier = values.getAsString(InventoryEntry.COLUMN_INVENTORY_SUPPLIER);
         if (supplier == null) {
             throw new IllegalArgumentException("Item requires supplier information");
         }
