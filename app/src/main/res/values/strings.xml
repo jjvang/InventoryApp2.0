@@ -6,7 +6,7 @@
     <string name="hint_item_price">Price</string>
     <string name="price">Price ($)</string>
     <string name="hint_name_price">Input Product Name Here</string>
-    <string name="delete_dialog_msg">Delete This Item?</string>
+    <string name="delete_dialog_msg">Delete this Item?</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
     <string name="action_insert_dummy_data">Insert Dummy Data</string>
@@ -25,4 +25,8 @@
     <string name="keep_editing">Keep Editing</string>
     <string name="editor_delete_item_failed">Error when deleting</string>
     <string name="editor_delete_item_successful">Item Deleted</string>
+    <string name="unknown_price">unknown price</string>
+    <string name="unknown_quantity">Unknown Quantity</string>
+    <string name="unknown_name">Unknown Item Name</string>
+    <string name="delete_dialog_msg_all">Delete All Items?</string>
 </resources>

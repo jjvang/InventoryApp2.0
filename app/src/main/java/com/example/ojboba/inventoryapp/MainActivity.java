@@ -101,6 +101,8 @@ public class MainActivity extends AppCompatActivity implements
         values.put(InventoryEntry.COLUMN_INVENTORY_PRICE, 1);
         values.put(InventoryEntry.COLUMN_INVENTORY_SUPPLIER, "Amazon");
         values.put(InventoryEntry.COLUMN_INVENTORY_QUANTITY, 1);
+//        values.put(InventoryEntry.COLUMN_INVENTORY_PHOTO_URI, );
+//        values.put(InventoryEntry.COLUMN_INVENTORY_SALES, 50);
 
         // Insert a new row for Raspberry into the provider using the ContentResolver.
         // Use the {@link InventoryEntry#CONTENT_URI} to indicate that we want to insert
@@ -149,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements
                 InventoryEntry._ID,
                 InventoryEntry.COLUMN_INVENTORY_NAME,
                 InventoryEntry.COLUMN_INVENTORY_PRICE,
+//                InventoryEntry.COLUMN_INVENTORY_SALES,
                 InventoryEntry.COLUMN_INVENTORY_QUANTITY};
 
         // This loader will execute the ContentProvider's query method on a background thread
@@ -176,7 +179,7 @@ public class MainActivity extends AppCompatActivity implements
         // Create an AlertDialog.Builder and set the message, and click listeners
         // for the positive and negative buttons on the dialog.
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(R.string.delete_dialog_msg);
+        builder.setMessage(R.string.delete_dialog_msg_all);
         builder.setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked the "Delete" button, so delete the pet.

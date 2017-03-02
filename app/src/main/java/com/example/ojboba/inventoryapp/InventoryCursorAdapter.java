@@ -31,27 +31,34 @@ public class InventoryCursorAdapter extends CursorAdapter{
         TextView nameTextView = (TextView) view.findViewById(R.id.item_name);
         TextView priceTextView = (TextView) view.findViewById(R.id.item_price);
         TextView quantityTextView = (TextView) view.findViewById(R.id.item_quantity);
+        TextView salesTextView = (TextView) view.findViewById(R.id.item_sales);
 
         // Find the columns of inventory attributes that we're interested in
         int nameColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_NAME);
         int priceColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_PRICE);
         int quantityColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_QUANTITY);
+        int salesColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_SALES);
 
         // Read the inventory attributes from the Cursor for the current inventory
         String InventoryName = cursor.getString(nameColumnIndex);
         String InventoryPrice = cursor.getString(priceColumnIndex);
         String InventoryQuantity = cursor.getString(quantityColumnIndex);
+//        String InventorySales = cursor.getString(salesColumnIndex);
 
         // If the inventory supplier is empty string or null, then use some default text
         // that says "Unknown Supplier", so the TextView isn't blank.
-        if (TextUtils.isEmpty(InventoryQuantity)) {
-            InventoryQuantity = context.getString(R.string.unknown_supplier);
+        if (TextUtils.isEmpty(InventoryName)) {
+            InventoryName = context.getString(R.string.unknown_name);
+        }
+        if (TextUtils.isEmpty(InventoryPrice)) {
+            InventoryPrice = context.getString(R.string.unknown_price);
         }
 
         // Update the TextViews with the attributes for the current inventory
-        nameTextView.setText(InventoryName);
-        priceTextView.setText(InventoryPrice);
-        quantityTextView.setText(InventoryQuantity);
+        nameTextView.setText("Item Name: " + InventoryName);
+        priceTextView.setText("Item Price: $"  + InventoryPrice);
+        quantityTextView.setText("Item Quantity: " + InventoryQuantity);
+//        salesTextView.setText("Total Sold: " + InventorySales);
 
     }
 }

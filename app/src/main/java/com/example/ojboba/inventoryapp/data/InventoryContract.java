@@ -97,6 +97,9 @@ public final class InventoryContract {
         public final static String COLUMN_INVENTORY_QUANTITY = "quantity";
 
 
+        public final static String COLUMN_INVENTORY_SALES = "sales";
+
+        public final static String COLUMN_INVENTORY_PHOTO_URI = "uri";
     }
 
 }

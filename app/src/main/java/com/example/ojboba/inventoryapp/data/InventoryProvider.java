@@ -205,12 +205,12 @@ public class InventoryProvider extends ContentProvider{
         // check that the price value is valid.
         if (values.containsKey(InventoryEntry.COLUMN_INVENTORY_PRICE)) {
             Integer price = values.getAsInteger(InventoryEntry.COLUMN_INVENTORY_PRICE);
-            if (price == null) {
-                throw new IllegalArgumentException("Item requires a price");
-            }
-            if (price < 0){
-                throw new IllegalArgumentException("Item price cannot be negative");
-            }
+//            if (price == null) {
+//                throw new IllegalArgumentException("Item requires a price");
+//            }
+//            if (price < 0){
+//                throw new IllegalArgumentException("Item price cannot be negative");
+//            }
         }
 
 
@@ -225,7 +225,25 @@ public class InventoryProvider extends ContentProvider{
                 throw new IllegalArgumentException("Item quantity cannot be negative");
             }
         }
+//---------------------------------TOTAL SALES ENTRY------------------------------------------------
+//        if (values.containsKey(InventoryEntry.COLUMN_INVENTORY_SALES)) {
+//            Integer sales = values.getAsInteger(InventoryEntry.COLUMN_INVENTORY_SALES);
+//            if (sales == null) {
+//                throw new IllegalArgumentException("Item requires a quantity");
+//            }
+//            if (sales < 0){
+//                throw new IllegalArgumentException("Item quantity cannot be negative");
+//            }
+//        }
 
+//---------------------------------PH0TO URI CHECK--------------------------------------------------
+        if (values.containsKey(InventoryEntry.COLUMN_INVENTORY_PHOTO_URI)) {
+            String photoUri = values.getAsString(InventoryEntry.COLUMN_INVENTORY_PHOTO_URI);
+//            if (photoUri == null) {
+//                throw new IllegalArgumentException("Item requires an Image");
+//            }
+        }
+//--------------------------------------------------------------------------------------------------
         // If there are no values to update, then don't try to update the database
         if (values.size() == 0) {
             return 0;
@@ -317,12 +335,12 @@ public class InventoryProvider extends ContentProvider{
 
         // Check that the price is valid
         Integer price = values.getAsInteger(InventoryEntry.COLUMN_INVENTORY_PRICE);
-        if (price == null) {
-                throw new IllegalArgumentException("Item requires a price");
-            }
-            if (price < 0){
-                throw new IllegalArgumentException("Item price cannot be negative");
-            }
+//        if (price == null) {
+//                throw new IllegalArgumentException("Item requires a price");
+//            }
+//            if (price < 0){
+//                throw new IllegalArgumentException("Item price cannot be negative");
+//            }
 
 
         // Check that the supplier is valid
@@ -334,12 +352,27 @@ public class InventoryProvider extends ContentProvider{
         // Check that the quantity is valid
         Integer quantity = values.getAsInteger(InventoryEntry.COLUMN_INVENTORY_QUANTITY);
         if (quantity == null) {
-            throw new IllegalArgumentException("Item requires a price");
+            throw new IllegalArgumentException("Item requires a quantity");
         }
         if (quantity < 0){
             throw new IllegalArgumentException("Item price cannot be negative");
         }
+//---------------------------------TOTAL SALES ENTRY------------------------------------------------
+//        // Check that the quantity is valid
+//        Integer sales = values.getAsInteger(InventoryEntry.COLUMN_INVENTORY_SALES);
+//        if (sales == null) {
+//            throw new IllegalArgumentException("Item requires a quantity");
+//        }
+//        if (sales < 0){
+//            throw new IllegalArgumentException("Item price cannot be negative");
+//        }
+//---------------------------------PHOTO URI--------------------------------------------------------
 
+        String photoUri = values.getAsString(InventoryEntry.COLUMN_INVENTORY_PHOTO_URI);
+//        if (photoUri == null) {
+//            throw new IllegalArgumentException("Item requires a photo");
+//        }
+//--------------------------------------------------------------------------------------------------
 
         // Get write-able database
         SQLiteDatabase database = mDbHelper.getWritableDatabase();
