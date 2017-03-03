@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements
         values.put(InventoryEntry.COLUMN_INVENTORY_PRICE, 1);
         values.put(InventoryEntry.COLUMN_INVENTORY_SUPPLIER, "Amazon");
         values.put(InventoryEntry.COLUMN_INVENTORY_QUANTITY, 1);
-//        values.put(InventoryEntry.COLUMN_INVENTORY_PHOTO_URI, );
+        values.put(InventoryEntry.COLUMN_INVENTORY_PHOTO, "");
 //        values.put(InventoryEntry.COLUMN_INVENTORY_SALES, 50);
 
         // Insert a new row for Raspberry into the provider using the ContentResolver.

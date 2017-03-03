@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -159,6 +160,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mPriceEditText.setOnTouchListener(mTouchListener);
         mSupplierEditText.setOnTouchListener(mTouchListener);
         mQuantityEditText.setOnTouchListener(mTouchListener);
+        mChooseImageButton.setOnTouchListener(mTouchListener);
 
         mAddQuantityButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -242,11 +244,12 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 String supplierInput = mSupplierEditText.getText().toString();
                 String shipmentQuantityInput = mShipmentQuantity.getText().toString();
 
-                if (priceInput.matches("")){
-                    mPriceEditText.setError("Add Price");
-                }
+
                 if(nameInput.matches("")){
                     mNameEditText.setError("Add Name");
+                }
+                if (priceInput.matches("")){
+                    mPriceEditText.setError("Add Price");
                 }
                 if (supplierInput.matches("")) {
                     mSupplierEditText.setError("Add Supplier");
@@ -447,7 +450,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 // Save item to database
                 saveInventory();
                 // Exit activity
-                finish();
+//                finish();
                 return true;
             // Respond to a click on the "Delete" menu option
             case R.id.action_delete:
@@ -494,6 +497,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         String quantityString = mQuantityTextView.getText().toString().trim();
         String uriString = mUri.toString().trim();
 
+
         // Check if this is supposed to be a new pet
         // and check if all the fields in the editor are blank
         // This code returns the code without creating a list view if nothing is entered
@@ -505,57 +509,93 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             return;
         }
 
-        // Create a ContentValues object where column names are the keys,
-        // and pet attributes from the editor are the values.
-        ContentValues values = new ContentValues();
-        values.put(InventoryEntry.COLUMN_INVENTORY_NAME, nameString);
+
+        if (nameString.matches("")){
+            mNameEditText.setError("Add Name");
+        }
+        if(priceString.matches("")){
+            mPriceEditText.setError("Add Price");
+        }
+        if (supplierString.matches("")) {
+            mSupplierEditText.setError("Add Supplier");
+        }
+        if (uriString.matches("")){
+            Snackbar.make(mChooseImageButton, "Image not selected", Snackbar.LENGTH_LONG)
+                    .setAction("Select", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent;
+
+                            if (Build.VERSION.SDK_INT < 19) {
+                                intent = new Intent(Intent.ACTION_GET_CONTENT);
+                            } else {
+                                intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                            }
+
+                            intent.setType("image/*");
+                            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+                        }
+                    }).show();
+        }
+        if(TextUtils.isEmpty(nameString) || TextUtils.isEmpty(priceString) || TextUtils.isEmpty(supplierString) || TextUtils.isEmpty(uriString)) {
+            Toast.makeText(EditorActivity.this, "Please input all item information", Toast.LENGTH_SHORT).show();
+        }else {
+
+            // Create a ContentValues object where column names are the keys,
+            // and pet attributes from the editor are the values.
+            ContentValues values = new ContentValues();
+            values.put(InventoryEntry.COLUMN_INVENTORY_NAME, nameString);
 //        values.put(InventoryEntry.COLUMN_INVENTORY_PRICE, priceString);
-        values.put(InventoryEntry.COLUMN_INVENTORY_SUPPLIER, supplierString);
-        // If the weight is not provided by the user, don't try to parse the string into an
-        // integer value. Use 0 by default.
-        // This also helps the app not crash because it cannot convert a blank space into an integer
+            values.put(InventoryEntry.COLUMN_INVENTORY_SUPPLIER, supplierString);
+            // If the weight is not provided by the user, don't try to parse the string into an
+            // integer value. Use 0 by default.
+            // This also helps the app not crash because it cannot convert a blank space into an integer
 //        int defaultPrice = 0;
 //        float defaultPrice = 0;
 //        if (!TextUtils.isEmpty(priceString)) {
 //            defaultPrice = Integer.parseInt(priceString);
 //        }
-        values.put(InventoryEntry.COLUMN_INVENTORY_PRICE, priceString);
-        values.put(InventoryEntry.COLUMN_INVENTORY_QUANTITY, quantityString);
-        values.put(InventoryEntry.COLUMN_INVENTORY_PHOTO_URI, uriString);
+            values.put(InventoryEntry.COLUMN_INVENTORY_PRICE, priceString);
+            values.put(InventoryEntry.COLUMN_INVENTORY_QUANTITY, quantityString);
+            values.put(InventoryEntry.COLUMN_INVENTORY_PHOTO, uriString);
 
-        // Determine if this is a new or existing pet by checking if mCurrentPetUri is null or not
-        if (mCurrentProductUri == null) {
-            // This is a NEW pet, so insert a new pet into the provider,
-            // returning the content URI for the new pet.
-            Uri newUri = getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
+            // Determine if this is a new or existing pet by checking if mCurrentPetUri is null or not
+            if (mCurrentProductUri == null) {
+                // This is a NEW pet, so insert a new pet into the provider,
+                // returning the content URI for the new pet.
+                Uri newUri = getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
 
-            // Show a toast message depending on whether or not the insertion was successful.
-            if (newUri == null) {
-                // If the new content URI is null, then there was an error with insertion.
-                Toast.makeText(this, getString(R.string.editor_insert_item_failed),
-                        Toast.LENGTH_SHORT).show();
+                // Show a toast message depending on whether or not the insertion was successful.
+                if (newUri == null) {
+                    // If the new content URI is null, then there was an error with insertion.
+                    Toast.makeText(this, getString(R.string.editor_insert_item_failed),
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    // Otherwise, the insertion was successful and we can display a toast.
+                    Toast.makeText(this, getString(R.string.editor_insert_item_successful),
+                            Toast.LENGTH_SHORT).show();
+                }
             } else {
-                // Otherwise, the insertion was successful and we can display a toast.
-                Toast.makeText(this, getString(R.string.editor_insert_item_successful),
-                        Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            // Otherwise this is an EXISTING pet, so update the pet with content URI: mCurrentPetUri
-            // and pass in the new ContentValues. Pass in null for the selection and selection args
-            // because mCurrentPetUri will already identify the correct row in the database that
-            // we want to modify.
-            int rowsAffected = getContentResolver().update(mCurrentProductUri, values, null, null);
+                // Otherwise this is an EXISTING pet, so update the pet with content URI: mCurrentPetUri
+                // and pass in the new ContentValues. Pass in null for the selection and selection args
+                // because mCurrentPetUri will already identify the correct row in the database that
+                // we want to modify.
+                int rowsAffected = getContentResolver().update(mCurrentProductUri, values, null, null);
 
-            // Show a toast message depending on whether or not the update was successful.
-            if (rowsAffected == 0) {
-                // If no rows were affected, then there was an error with the update.
-                Toast.makeText(this, getString(R.string.editor_update_item_failed),
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                // Otherwise, the update was successful and we can display a toast.
-                Toast.makeText(this, getString(R.string.editor_update_item_successful),
-                        Toast.LENGTH_SHORT).show();
+                // Show a toast message depending on whether or not the update was successful.
+                if (rowsAffected == 0) {
+                    // If no rows were affected, then there was an error with the update.
+                    Toast.makeText(this, getString(R.string.editor_update_item_failed),
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    // Otherwise, the update was successful and we can display a toast.
+                    Toast.makeText(this, getString(R.string.editor_update_item_successful),
+                            Toast.LENGTH_SHORT).show();
+                }
             }
+
+            finish();
         }
     }
 
@@ -674,7 +714,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 InventoryEntry.COLUMN_INVENTORY_PRICE,
                 InventoryEntry.COLUMN_INVENTORY_SUPPLIER,
                 InventoryEntry.COLUMN_INVENTORY_QUANTITY,
-                InventoryEntry.COLUMN_INVENTORY_PHOTO_URI,
+                InventoryEntry.COLUMN_INVENTORY_PHOTO,
 //                InventoryEntry.COLUMN_INVENTORY_SALES
         };
 
@@ -702,7 +742,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 int priceColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_PRICE);
                 int supplierColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_SUPPLIER);
                 int quantityColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_QUANTITY);
-                int photoColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_PHOTO_URI);
+                int photoColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_PHOTO);
 //                int salesColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_SALES);
 
                 // Extract out the value from the Cursor for the given column index
@@ -721,7 +761,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 mQuantityTextView.setText("" + quantityNumber);
                 quantity = quantityNumber;
                 photoUri = currentUri;
-                mProductImage.setImageBitmap(getBitmapFromUri(mUri.parse(photoUri)));
+                mUri = Uri.parse(photoUri);
+//                photoUri = mUri.toString();
+                mProductImage.setImageBitmap(getBitmapFromUri(mUri));
 //                salesTotal = salesNumber;
             }
         }

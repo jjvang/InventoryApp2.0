@@ -237,8 +237,8 @@ public class InventoryProvider extends ContentProvider{
 //        }
 
 //---------------------------------PH0TO URI CHECK--------------------------------------------------
-        if (values.containsKey(InventoryEntry.COLUMN_INVENTORY_PHOTO_URI)) {
-            String photoUri = values.getAsString(InventoryEntry.COLUMN_INVENTORY_PHOTO_URI);
+        if (values.containsKey(InventoryEntry.COLUMN_INVENTORY_PHOTO)) {
+            String photoUri = values.getAsString(InventoryEntry.COLUMN_INVENTORY_PHOTO);
 //            if (photoUri == null) {
 //                throw new IllegalArgumentException("Item requires an Image");
 //            }
@@ -368,7 +368,7 @@ public class InventoryProvider extends ContentProvider{
 //        }
 //---------------------------------PHOTO URI--------------------------------------------------------
 
-        String photoUri = values.getAsString(InventoryEntry.COLUMN_INVENTORY_PHOTO_URI);
+        String photoUri = values.getAsString(InventoryEntry.COLUMN_INVENTORY_PHOTO);
 //        if (photoUri == null) {
 //            throw new IllegalArgumentException("Item requires a photo");
 //        }
