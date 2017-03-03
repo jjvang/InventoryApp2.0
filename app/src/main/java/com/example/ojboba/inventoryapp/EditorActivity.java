@@ -225,7 +225,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     calculatePrice = Integer.parseInt(shipmentQuantityInput) * Float.parseFloat(mPriceEditText.getText().toString());
                     Intent intent = new Intent(Intent.ACTION_SENDTO);
                     intent.setData(Uri.parse("mailto:")); // only email apps should handle this
-                    intent.putExtra(Intent.EXTRA_SUBJECT, "Purchase Shipment for :" + nameInput);
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "Purchase Shipment for this Item :" + nameInput);
                     intent.putExtra(Intent.EXTRA_TEXT, createOrderSummary(mNameEditText, mShipmentQuantity, calculatePrice));
                     if (intent.resolveActivity(getPackageManager()) != null) {
                         startActivity(intent);
@@ -335,7 +335,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
 //-----------------------------ORDER SHIPMENT INTENT------------------------------------------------
     private String createOrderSummary(EditText name, EditText quantity, float calculatePrice){
-        String intentMessage = "Name:" + name.getText().toString();
+        String intentMessage = "Item Name:" + name.getText().toString();
         intentMessage += "\nQuantity: " + quantity.getText().toString();
         intentMessage = intentMessage + "\nTotal Cost: $" + calculatePrice;
         intentMessage = intentMessage + "\nThank You!";

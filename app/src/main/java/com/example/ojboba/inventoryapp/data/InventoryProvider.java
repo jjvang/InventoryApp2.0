@@ -218,13 +218,6 @@ public class InventoryProvider extends ContentProvider{
                 throw new IllegalArgumentException("Item quantity cannot be negative");
             }
         }
-//---------------------------------TOTAL SALES ENTRY------------------------------------------------
-        if (values.containsKey(InventoryEntry.COLUMN_INVENTORY_SALES)) {
-            Integer sales = values.getAsInteger(InventoryEntry.COLUMN_INVENTORY_SALES);
-            if (sales == null) {
-                throw new IllegalArgumentException("Item requires a quantity");
-            }
-        }
 //---------------------------------PH0TO URI CHECK--------------------------------------------------
         if (values.containsKey(InventoryEntry.COLUMN_INVENTORY_PHOTO)) {
             String photoUri = values.getAsString(InventoryEntry.COLUMN_INVENTORY_PHOTO);
@@ -342,12 +335,6 @@ public class InventoryProvider extends ContentProvider{
         }
         if (quantity < 0){
             throw new IllegalArgumentException("Item price cannot be negative");
-        }
-//---------------------------------TOTAL SOLD ENTRY-------------------------------------------------
-        // Check that the quantity is valid
-        Integer sales = values.getAsInteger(InventoryEntry.COLUMN_INVENTORY_SALES);
-        if (sales == null) {
-            throw new IllegalArgumentException("Item requires a quantity");
         }
 //---------------------------------PHOTO URI--------------------------------------------------------
 
