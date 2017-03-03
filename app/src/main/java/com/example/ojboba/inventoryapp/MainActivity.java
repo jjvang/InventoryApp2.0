@@ -24,6 +24,7 @@ import com.example.ojboba.inventoryapp.data.InventoryContract.InventoryEntry;
 public class MainActivity extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
 
+//----------------------------------Variables-------------------------------------------------------
     /**
      * Identifier for the Inventory data loader
      */
@@ -35,11 +36,11 @@ public class MainActivity extends AppCompatActivity implements
      */
     InventoryCursorAdapter mCursorAdapter;
 
+//----------------------------------onCreate Starts-------------------------------------------------
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         // Setup FAB to open EditorActivity
         // Floating Action Button
@@ -89,7 +90,9 @@ public class MainActivity extends AppCompatActivity implements
         getSupportLoaderManager().initLoader(INVENTORY_LOADER, null, this);
 
     }
-
+//----------------------------------onCreate ENDS---------------------------------------------------
+//--------------------------------------------------------------------------------------------------
+//------------------------------insertInventory METHOD----------------------------------------------
     /**
      * Helper method to insert hardcoded inventory data into the database. For debugging purposes only.
      */
@@ -98,10 +101,11 @@ public class MainActivity extends AppCompatActivity implements
         // and Raspberry's inventories attributes are the values.
         ContentValues values = new ContentValues();
         values.put(InventoryEntry.COLUMN_INVENTORY_NAME, "Raspberry");
-        values.put(InventoryEntry.COLUMN_INVENTORY_PRICE, 1);
+        values.put(InventoryEntry.COLUMN_INVENTORY_PRICE, 1.55);
         values.put(InventoryEntry.COLUMN_INVENTORY_SUPPLIER, "Amazon");
         values.put(InventoryEntry.COLUMN_INVENTORY_QUANTITY, 1);
         values.put(InventoryEntry.COLUMN_INVENTORY_PHOTO, "");
+        values.put(InventoryEntry.COLUMN_INVENTORY_SALES, 0);
 //        values.put(InventoryEntry.COLUMN_INVENTORY_SALES, 50);
 
         // Insert a new row for Raspberry into the provider using the ContentResolver.
@@ -110,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements
         // Receive the new content URI that will allow us to access Raspberry's data in the future.
         Uri newUri = getContentResolver().insert(InventoryEntry.CONTENT_URI, values);
     }
-
+//------------------------------deleteAllPets METHOD------------------------------------------------
     /**
      * Helper method to delete all pets in the database.
      */
@@ -118,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements
         int rowsDeleted = getContentResolver().delete(InventoryEntry.CONTENT_URI, null, null);
         Log.v("CatalogActivity", rowsDeleted + " rows deleted from pet database");
     }
-
+//----------------------------------MENU ITEMS START------------------------------------------------
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu options from the res/menu/menu_catalog.xml file.
@@ -138,12 +142,13 @@ public class MainActivity extends AppCompatActivity implements
             // Respond to a click on the "Delete all entries" menu option
             case R.id.action_delete_all_entries:
                 showDeleteConfirmationDialog();
-//                deleteAllPets();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
+//----------------------------------MENU ITEMS ENDS-------------------------------------------------
 
+//----------------------------------LOADER STARTS---------------------------------------------------
     @Override
     public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
                 // Define a projection that specifies the columns from the table we care about.
@@ -151,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements
                 InventoryEntry._ID,
                 InventoryEntry.COLUMN_INVENTORY_NAME,
                 InventoryEntry.COLUMN_INVENTORY_PRICE,
-//                InventoryEntry.COLUMN_INVENTORY_SALES,
+                InventoryEntry.COLUMN_INVENTORY_SALES,
                 InventoryEntry.COLUMN_INVENTORY_QUANTITY};
 
         // This loader will execute the ContentProvider's query method on a background thread
@@ -200,6 +205,5 @@ public class MainActivity extends AppCompatActivity implements
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-
-
+//---------------------------------------LOADER ENDS------------------------------------------------
 }

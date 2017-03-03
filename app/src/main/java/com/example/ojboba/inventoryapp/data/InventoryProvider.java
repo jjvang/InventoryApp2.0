@@ -48,7 +48,6 @@ public class InventoryProvider extends ContentProvider{
         // should recognize. All paths added to the UriMatcher have a corresponding code to return
         // when a match is found.
 
-
         /*
          * The calls to addURI() go here, for all of the content URI patterns that the provider
          * should recognize. For this snippet, only the calls for table 3 are shown.
@@ -58,7 +57,6 @@ public class InventoryProvider extends ContentProvider{
          * Sets the integer value for multiple rows in table 3 to 1. Notice that no wildcard is used
          * in the path
          */
-//        sUriMatcher.addURI("com.example.app.provider", "table3", 1); - EXAMPLE
 
         sUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_INVENTORIES, INVENTORIES);
 
@@ -67,7 +65,6 @@ public class InventoryProvider extends ContentProvider{
          * used. "content://com.example.app.provider/table3/3" matches, but
          * "content://com.example.app.provider/table3 doesn't.
          */
-//        sUriMatcher.addURI("com.example.app.provider", "table3/#", 2); - EXAMPLE
 
         sUriMatcher.addURI(InventoryContract.CONTENT_AUTHORITY, InventoryContract.PATH_INVENTORIES + "/#", INVENTORIES_ID);
     }
@@ -77,7 +74,7 @@ public class InventoryProvider extends ContentProvider{
      */
     private InventoryDbHelper mDbHelper;
 
-
+//-------------------------------------onCreate-----------------------------------------------------
     @Override
     public boolean onCreate() {
         mDbHelper = new InventoryDbHelper(getContext());
@@ -85,7 +82,7 @@ public class InventoryProvider extends ContentProvider{
         // ContentProvider methods.
         return true;
     }
-
+//------------------------------------Cursor query--------------------------------------------------
     /**
      * Perform the query for the given URI. Use the given projection, selection, selection arguments, and sort order.
      */
@@ -136,7 +133,7 @@ public class InventoryProvider extends ContentProvider{
 
         return cursor;
     }
-
+//------------------------------------Uri insert----------------------------------------------------
     /**
      * Insert new data into the provider with the given ContentValues.
      */
@@ -153,7 +150,7 @@ public class InventoryProvider extends ContentProvider{
                 throw new IllegalArgumentException("Insertion is not supported for " + uri);
         }
     }
-
+//------------------------------------UPDATE STARTS-------------------------------------------------
     /**
      * Updates the data at the given selection and selection arguments, with the new ContentValues.
      */
@@ -175,7 +172,7 @@ public class InventoryProvider extends ContentProvider{
                 throw new IllegalArgumentException("Update is not supported for " + uri);
         }
     }
-
+//----------------------------------updateInventory method------------------------------------------
     /**
      * Update inventories in the database with the given content values. Apply the changes to the rows
      * specified in the selection and selection arguments (which could be 0 or 1 or more pets).
@@ -205,14 +202,10 @@ public class InventoryProvider extends ContentProvider{
         // check that the price value is valid.
         if (values.containsKey(InventoryEntry.COLUMN_INVENTORY_PRICE)) {
             Integer price = values.getAsInteger(InventoryEntry.COLUMN_INVENTORY_PRICE);
-//            if (price == null) {
-//                throw new IllegalArgumentException("Item requires a price");
-//            }
-//            if (price < 0){
-//                throw new IllegalArgumentException("Item price cannot be negative");
-//            }
+            if (price == null) {
+                throw new IllegalArgumentException("Item requires a price");
+            }
         }
-
 
         // If the {@link InventoryEntry#COLUMN_INVENTORY_QUANTITY} key is present,
         // check that the quantity value is valid.
@@ -226,22 +219,18 @@ public class InventoryProvider extends ContentProvider{
             }
         }
 //---------------------------------TOTAL SALES ENTRY------------------------------------------------
-//        if (values.containsKey(InventoryEntry.COLUMN_INVENTORY_SALES)) {
-//            Integer sales = values.getAsInteger(InventoryEntry.COLUMN_INVENTORY_SALES);
-//            if (sales == null) {
-//                throw new IllegalArgumentException("Item requires a quantity");
-//            }
-//            if (sales < 0){
-//                throw new IllegalArgumentException("Item quantity cannot be negative");
-//            }
-//        }
-
+        if (values.containsKey(InventoryEntry.COLUMN_INVENTORY_SALES)) {
+            Integer sales = values.getAsInteger(InventoryEntry.COLUMN_INVENTORY_SALES);
+            if (sales == null) {
+                throw new IllegalArgumentException("Item requires a quantity");
+            }
+        }
 //---------------------------------PH0TO URI CHECK--------------------------------------------------
         if (values.containsKey(InventoryEntry.COLUMN_INVENTORY_PHOTO)) {
             String photoUri = values.getAsString(InventoryEntry.COLUMN_INVENTORY_PHOTO);
-//            if (photoUri == null) {
-//                throw new IllegalArgumentException("Item requires an Image");
-//            }
+            if (photoUri == null) {
+                throw new IllegalArgumentException("Item requires an Image");
+            }
         }
 //--------------------------------------------------------------------------------------------------
         // If there are no values to update, then don't try to update the database
@@ -265,10 +254,10 @@ public class InventoryProvider extends ContentProvider{
 
         // Return the number of rows updated
         return rowsUpdated;
-
     }
+//------------------------------------UPDATE ENDS---------------------------------------------------
 
-
+//------------------------------------DELETE--------------------------------------------------------
     /**
      * Delete the data at the given selection and selection arguments.
      */
@@ -305,7 +294,7 @@ public class InventoryProvider extends ContentProvider{
         // Return the number of rows deleted
         return rowsDeleted;
     }
-
+//----------------------------------getType (MIME)--------------------------------------------------
     /**
      * Returns the MIME type of data for the content URI.
      */
@@ -321,7 +310,7 @@ public class InventoryProvider extends ContentProvider{
                 throw new IllegalStateException("Unknown URI " + uri + " with match " + match);
         }
     }
-
+//----------------------------------insertInventory-------------------------------------------------
     /**
      * Insert a pet into the database with the given content values. Return the new content URI
      * for that specific row in the database.
@@ -335,12 +324,9 @@ public class InventoryProvider extends ContentProvider{
 
         // Check that the price is valid
         Integer price = values.getAsInteger(InventoryEntry.COLUMN_INVENTORY_PRICE);
-//        if (price == null) {
-//                throw new IllegalArgumentException("Item requires a price");
-//            }
-//            if (price < 0){
-//                throw new IllegalArgumentException("Item price cannot be negative");
-//            }
+        if (price == null) {
+                throw new IllegalArgumentException("Item requires a price");
+            }
 
 
         // Check that the supplier is valid
@@ -357,21 +343,18 @@ public class InventoryProvider extends ContentProvider{
         if (quantity < 0){
             throw new IllegalArgumentException("Item price cannot be negative");
         }
-//---------------------------------TOTAL SALES ENTRY------------------------------------------------
-//        // Check that the quantity is valid
-//        Integer sales = values.getAsInteger(InventoryEntry.COLUMN_INVENTORY_SALES);
-//        if (sales == null) {
-//            throw new IllegalArgumentException("Item requires a quantity");
-//        }
-//        if (sales < 0){
-//            throw new IllegalArgumentException("Item price cannot be negative");
-//        }
+//---------------------------------TOTAL SOLD ENTRY-------------------------------------------------
+        // Check that the quantity is valid
+        Integer sales = values.getAsInteger(InventoryEntry.COLUMN_INVENTORY_SALES);
+        if (sales == null) {
+            throw new IllegalArgumentException("Item requires a quantity");
+        }
 //---------------------------------PHOTO URI--------------------------------------------------------
 
         String photoUri = values.getAsString(InventoryEntry.COLUMN_INVENTORY_PHOTO);
-//        if (photoUri == null) {
-//            throw new IllegalArgumentException("Item requires a photo");
-//        }
+        if (photoUri == null) {
+            throw new IllegalArgumentException("Item requires a photo");
+        }
 //--------------------------------------------------------------------------------------------------
 
         // Get write-able database

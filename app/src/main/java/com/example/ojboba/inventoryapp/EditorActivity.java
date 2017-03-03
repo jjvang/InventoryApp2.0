@@ -42,15 +42,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     private static final String LOG_TAG = EditorActivity.class.getSimpleName();
 
-    /** Identifier for the inventories data loader */
-    private static final int EXISTING_PET_LOADER = 0;
+//----------------------------------Variables-------------------------------------------------------
 
     int quantity;
-    int salesTotal;
     int inputQuantity = 0;
     float calculatePrice = 0;
-    String photoUri;
-    final int REQUEST_CODE_GALLERY = 999;
+//-----------------------------PRIVATE Views/URI + ETC----------------------------------------------
+    /** Identifier for the inventories data loader */
+    private static final int EXISTING_PET_LOADER = 0;
 
     /** Content URI for the existing inventory (null if it's a new inventory) */
     private Uri mCurrentProductUri;
@@ -75,26 +74,22 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
     private TextView mChooseImageButton;
 
-    private TextView mSalesItemTextView;
-
     private TextView mQuantityTextView;
 
     private EditText mShipmentQuantity;
 
     private ImageView mProductImage;
 
-    String mCurrentPhotoPath;
-
     private static final int SEND_MAIL_REQUEST = 1;
     private static final int PICK_IMAGE_REQUEST = 1;
-    static final int REQUEST_TAKE_PHOTO = 1;
 
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    private Uri mUri;
+    private Uri mUri = Uri.parse("");
+    String photoUri = mUri.toString();
 
     /** Boolean flag that keeps track of whether the product has been edited (true) or not (false) */
     private boolean mProductHasChanged = false;
 
+//-------------------Checks if any EditText has been clicked/touched--------------------------------
     /**
      * OnTouchListener that listens for any user touches on a View, implying that they are modifying
      * the view, and we change the mProductHasChanged boolean to true.
@@ -106,8 +101,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             return false;
         }
     };
-
-
+//----------------------------------onCreate Starts-------------------------------------------------
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,9 +139,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mQuantityEditText = (EditText) findViewById(R.id.inputQuantity);
         mShipmentQuantity = (EditText) findViewById(R.id.inputShipmentQuantity);
 
-
         mQuantityTextView = (TextView) findViewById(R.id.quantity_text_view);
-        mSalesItemTextView = (TextView) findViewById(R.id.item_sales_text_view);
         mChooseImageButton = (TextView) findViewById(R.id.chooseImage);
         mAddQuantityButton = (TextView) findViewById(R.id.addQuantity);
         mSubQuantityButton = (TextView) findViewById(R.id.subQuantity);
@@ -162,6 +154,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mQuantityEditText.setOnTouchListener(mTouchListener);
         mChooseImageButton.setOnTouchListener(mTouchListener);
 
+//--------------------------------ADD QUANTITY BUTTON-----------------------------------------------
         mAddQuantityButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -171,19 +164,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                     displayQuantity(quantity);
                 }catch (NumberFormatException e){
                     mQuantityEditText.setError("Add Quantity");
-//                    Toast.makeText(EditorActivity.this, "Please Input Quantity", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
-
-        // Unable to use a if/else statement because it errors saying that inputQuantity is null or empty
-        // Unable to check if the string is empty, not sure why that is the actual case
-        // THIS ACTUALLY WORKS, THE CODE BELOW
-//        String quanString = mQuantityEditText.getText().toString();
-//        if (quanString.matches("")){
-//            Toast.makeText(EditorActivity.this, "Please Input Quantity", Toast.LENGTH_SHORT).show();
-//        }
+//--------------------------------SUB QUANTITY BUTTON-----------------------------------------------
         mSubQuantityButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -195,54 +179,21 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                         Toast.makeText(EditorActivity.this, "Quantity cannot be less than 0", Toast.LENGTH_SHORT).show();
                     }else{
                         displayQuantity(quantity);
-                        salesTotal = salesTotal + inputQuantity;
-                        displaySalesQuantity(salesTotal);
                     }
                 }catch (NumberFormatException e){
                     mQuantityEditText.setError("Add Quantity");
-//                    Toast.makeText(EditorActivity.this, "Please Input Quantity", Toast.LENGTH_SHORT).show();
                 }
-//                String quanString = mQuantityEditText.getText().toString();
-////                if (Integer.parseInt(mQuantityEditText.getText().toString()) == 0)
-//                if (quanString.matches("")){
-//                    Toast.makeText(EditorActivity.this, "Please Input Quantity", Toast.LENGTH_SHORT).show();
-//                }
-//                else{
-//                    inputQuantity = Integer.parseInt(mQuantityEditText.getText().toString());
-//                    quantity = quantity - inputQuantity;
-//                    if (quantity < 0){
-//                        quantity = quantity + inputQuantity;
-//                        Toast.makeText(EditorActivity.this, "Quantity cannot be less than 0", Toast.LENGTH_SHORT).show();
-//                    }else{
-//                        displayQuantity(quantity);
-//                    }
-//                }
-
             }
         });
-
-
+//------------------------------ORDER SHIPMENT BUTTON-----------------------------------------------
         mOrderShipmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                try{
-//                    calculatePrice = quantity * Integer.parseInt(mPriceEditText.getText().toString());
-//                    Intent intent = new Intent(Intent.ACTION_SENDTO);
-//                    intent.setData(Uri.parse("mailto:")); // only email apps should handle this
-//                    intent.putExtra(Intent.EXTRA_SUBJECT, "Purchase Shipment for :" + mNameEditText);
-//                    if (intent.resolveActivity(getPackageManager()) != null) {
-//                        startActivity(intent);
-//                    }
-//                }catch (NumberFormatException e){
-//                    Toast.makeText(EditorActivity.this, "Please input all item information", Toast.LENGTH_SHORT).show();
-//                }catch (NullPointerException e){
-//                    Toast.makeText(EditorActivity.this, "Please input all item information", Toast.LENGTH_SHORT).show();
-//                }
-//            }
                 String priceInput = mPriceEditText.getText().toString();
                 String nameInput = mNameEditText.getText().toString();
                 String supplierInput = mSupplierEditText.getText().toString();
                 String shipmentQuantityInput = mShipmentQuantity.getText().toString();
+                String uriString = mUri.toString().trim();
 
 
                 if(nameInput.matches("")){
@@ -257,10 +208,21 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 if (shipmentQuantityInput.matches("")){
                     mShipmentQuantity.setError("Add Quantity");
                 }
+
+                if (uriString.matches("")){
+                    Snackbar.make(mChooseImageButton, "Image not selected", Snackbar.LENGTH_LONG)
+                            .setAction("Select", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    imageCode();
+                                }
+                            }).show();
+                }
+
                 if(TextUtils.isEmpty(priceInput) || TextUtils.isEmpty(nameInput) || TextUtils.isEmpty(supplierInput) || TextUtils.isEmpty(shipmentQuantityInput)) {
                     Toast.makeText(EditorActivity.this, "Please input all item information", Toast.LENGTH_SHORT).show();
                 }else{
-                    calculatePrice = Integer.parseInt(shipmentQuantityInput) * Integer.parseInt(mPriceEditText.getText().toString());
+                    calculatePrice = Integer.parseInt(shipmentQuantityInput) * Float.parseFloat(mPriceEditText.getText().toString());
                     Intent intent = new Intent(Intent.ACTION_SENDTO);
                     intent.setData(Uri.parse("mailto:")); // only email apps should handle this
                     intent.putExtra(Intent.EXTRA_SUBJECT, "Purchase Shipment for :" + nameInput);
@@ -271,29 +233,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 }
             }
         });
+//----------------------------------onCreate ENDS---------------------------------------------------
 
 //-----------------------------ON CLICK IMAGE BUTTON------------------------------------------------
         mChooseImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent intent;
-
-                if (Build.VERSION.SDK_INT < 19) {
-                    intent = new Intent(Intent.ACTION_GET_CONTENT);
-                } else {
-                    intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                    intent.addCategory(Intent.CATEGORY_OPENABLE);
-                }
-
-                intent.setType("image/*");
-                startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
-//                dispatchTakePictureIntent();
-//                ActivityCompat.requestPermissions(
-//                        EditorActivity.this,
-//                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-//                        REQUEST_CODE_GALLERY
-//                );
+                imageCode();
             }
         });
 //-------------CATCHES/CHECKS REQUEST CODE TO SEE IF INTENT WAS REALLY OPENED-----------------------
@@ -372,6 +318,20 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             }
         }
     }
+//-----------------------------INTENT TO CHOOSE IMAGE-----------------------------------------------
+    private void imageCode(){
+        Intent intent;
+
+        if (Build.VERSION.SDK_INT < 19) {
+            intent = new Intent(Intent.ACTION_GET_CONTENT);
+        } else {
+            intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+        }
+
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
 
 //-----------------------------ORDER SHIPMENT INTENT------------------------------------------------
     private String createOrderSummary(EditText name, EditText quantity, float calculatePrice){
@@ -402,18 +362,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
         quantity = quantity - 1;
         displayQuantity(quantity);
-        salesTotal = salesTotal + 1;
-        displaySalesQuantity(salesTotal);
     }
 //---------------------------DISPLAY NEW QUANTITY METHOD--------------------------------------------
     private void displayQuantity(int number) {
-//        mQuantityTextView = (TextView) findViewById(R.id.quantity_text_view);
         mQuantityTextView.setText("" + number);
-    }
-
-    private void displaySalesQuantity(int number) {
-//        mQuantityTextView = (TextView) findViewById(R.id.quantity_text_view);
-        mSalesItemTextView.setText("" + number);
     }
 
 
@@ -484,7 +436,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
         return super.onOptionsItemSelected(item);
     }
+//---------------------------CREATE MENU ITEM ENDS--------------------------------------------------
 
+
+//-------------------------------SAVE INVENTORY-----------------------------------------------------
     /**
      * Get user input from editor and save pet into database.
      */
@@ -503,22 +458,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // This code returns the code without creating a list view if nothing is entered
         if (mCurrentProductUri == null &&
                 TextUtils.isEmpty(nameString) && TextUtils.isEmpty(priceString) &&
-                TextUtils.isEmpty(supplierString)) {
+                TextUtils.isEmpty(supplierString) && uriString.matches("") && quantityString.matches("0")) {
             // Since no fields were modified, we can return early without creating a new pet.
             // No need to create ContentValues and no need to do any ContentProvider operations.
+            finish();
             return;
         }
 
 
-        if (nameString.matches("")){
-            mNameEditText.setError("Add Name");
-        }
-        if(priceString.matches("")){
-            mPriceEditText.setError("Add Price");
-        }
-        if (supplierString.matches("")) {
-            mSupplierEditText.setError("Add Supplier");
-        }
         if (uriString.matches("")){
             Snackbar.make(mChooseImageButton, "Image not selected", Snackbar.LENGTH_LONG)
                     .setAction("Select", new View.OnClickListener() {
@@ -538,8 +485,22 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                         }
                     }).show();
         }
-        if(TextUtils.isEmpty(nameString) || TextUtils.isEmpty(priceString) || TextUtils.isEmpty(supplierString) || TextUtils.isEmpty(uriString)) {
-            Toast.makeText(EditorActivity.this, "Please input all item information", Toast.LENGTH_SHORT).show();
+
+        if (nameString.matches("")){
+            mNameEditText.setError("Add Name");
+        }
+        if (quantityString.matches("0")){
+            Toast.makeText(EditorActivity.this, "Quantity Cannot be Zero", Toast.LENGTH_SHORT).show();
+        }
+        if(priceString.matches("")){
+            mPriceEditText.setError("Add Price");
+        }
+        if (supplierString.matches("")) {
+            mSupplierEditText.setError("Add Supplier");
+        }
+
+        if(TextUtils.isEmpty(nameString) || TextUtils.isEmpty(priceString) || TextUtils.isEmpty(supplierString) || uriString.matches("") || quantityString.matches("0")) {
+//            Toast.makeText(EditorActivity.this, "Please input all item information", Toast.LENGTH_SHORT).show();
         }else {
 
             // Create a ContentValues object where column names are the keys,
@@ -551,12 +512,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // If the weight is not provided by the user, don't try to parse the string into an
             // integer value. Use 0 by default.
             // This also helps the app not crash because it cannot convert a blank space into an integer
-//        int defaultPrice = 0;
-//        float defaultPrice = 0;
-//        if (!TextUtils.isEmpty(priceString)) {
-//            defaultPrice = Integer.parseInt(priceString);
-//        }
-            values.put(InventoryEntry.COLUMN_INVENTORY_PRICE, priceString);
+
+            float decimalPrice = Float.parseFloat(priceString);
+
+            values.put(InventoryEntry.COLUMN_INVENTORY_PRICE, decimalPrice);
             values.put(InventoryEntry.COLUMN_INVENTORY_QUANTITY, quantityString);
             values.put(InventoryEntry.COLUMN_INVENTORY_PHOTO, uriString);
 
@@ -599,6 +558,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
     }
 
+//-----------------------------onBackPressed DialogInterface----------------------------------------
     /**
      * This method is called when the back button is pressed.
      */
@@ -624,7 +584,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         // Show dialog that there are unsaved changes
         showUnsavedChangesDialog(discardButtonClickListener);
     }
-
+//---------------------showUnsavedChangesDialog Method----------------------------------------------
     private void showUnsavedChangesDialog(
             DialogInterface.OnClickListener discardButtonClickListener) {
         // Create an AlertDialog.Builder and set the message, and click listeners
@@ -646,7 +606,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-
+//---------------------showDeleteConfirmationDialog Method------------------------------------------
     /**
      * Prompt the user to confirm that they want to delete this pet.
      */
@@ -675,7 +635,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
-
+//----------------------------------deletePet Method------------------------------------------------
     /**
      * Perform the deletion of the pet in the database.
      */
@@ -698,12 +658,10 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                         Toast.LENGTH_SHORT).show();
             }
         }
-
         // Close the activity
         finish();
     }
-
-
+//--------------------------------LOADER SET UP-----------------------------------------------------
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         // Since the editor shows all pet attributes, define a projection that contains
@@ -743,31 +701,27 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                 int supplierColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_SUPPLIER);
                 int quantityColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_QUANTITY);
                 int photoColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_PHOTO);
-//                int salesColumnIndex = cursor.getColumnIndex(InventoryEntry.COLUMN_INVENTORY_SALES);
 
                 // Extract out the value from the Cursor for the given column index
                 String name = cursor.getString(nameColumnIndex);
                 String supplier = cursor.getString(supplierColumnIndex);
-//                int price = cursor.getInt(priceColumnIndex);
-                int price = cursor.getInt(priceColumnIndex);
+
+                float price = cursor.getFloat(priceColumnIndex);
                 int quantityNumber = cursor.getInt(quantityColumnIndex);
                 String currentUri = cursor.getString(photoColumnIndex);
-//                int salesNumber = cursor.getInt(salesColumnIndex);
+
 
                 // Update the views on the screen with the values from the database
                 mNameEditText.setText(name);
                 mSupplierEditText.setText(supplier);
-                mPriceEditText.setText("" + price);
+                mPriceEditText.setText(Float.toString(price));
                 mQuantityTextView.setText("" + quantityNumber);
                 quantity = quantityNumber;
                 photoUri = currentUri;
                 mUri = Uri.parse(photoUri);
-//                photoUri = mUri.toString();
                 mProductImage.setImageBitmap(getBitmapFromUri(mUri));
-//                salesTotal = salesNumber;
             }
         }
-
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
@@ -777,126 +731,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mSupplierEditText.setText("");
         mQuantityEditText.setText("");
         mShipmentQuantity.setText("");
-//        mSalesItemTextView.setText("");
-//        mQuantityTextView.setText("" + 1);
     }
-
-
-//    //-----------------------------TAKE PHOTO WITH THE CAMERA APP---------------------------------------
-//
-//    public void dispatchTakePictureIntent() {
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-//        }
-//    }
-//------------------------ADVANCE WAY TO TAKE PHOTO WITH THE CAMERA APP-----------------------------
-//    private void dispatchTakePictureIntent() {
-//        // MediaStore is database to where images are stored and linked, a type of content provider
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        // Ensure that there's a camera activity to handle the intent
-//        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-//            // Create the File where the photo should go
-//            File photoFile = null;
-//            try {
-//                photoFile = createImageFile();
-//            } catch (IOException ex) {
-//                // Error occurred while creating the Fi
-//                Toast.makeText(getApplicationContext(), "Something Wrong While Taking Photos", Toast.LENGTH_SHORT).show();
-//            }
-//            // Continue only if the File was successfully created
-//            if (photoFile != null) {
-//                Uri photoURI = FileProvider.getUriForFile(this,
-//                        "com.example.android.fileprovider",
-//                        photoFile);
-//                // photo is to be stored at the photoURI
-//                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI).putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-//                startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-//            }
-//        }
-//    }
-//
-//    //---------------------------SAVE PHOTO WITH UNIQUE TIME STAMP--------------------------------------
-//    private File createImageFile() throws IOException {
-//        // Create an image file name
-//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//        String imageFileName = "JPEG_" + timeStamp + "_";
-//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-//        File image = File.createTempFile(
-//                imageFileName,  /* prefix */
-//                ".jpg",         /* suffix */
-//                storageDir      /* directory */
-//        );
-//
-//        // Save a file: path for use with ACTION_VIEW intents
-//        mCurrentPhotoPath = image.getAbsolutePath();
-//        return image;
-//    }
-//    //----------------------Retrieves data and displays it to an ImageView------------------------------
-//    // This override method is the results you get from the camera when you take the photo
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//
-//        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK && data != null) {
-//            // Bundle returns the value associated with the given key, in this case the image Intent URI
-//            Bundle extras = data.getExtras();
-//            Bitmap imageBitmap = (Bitmap) extras.get("data");
-//            productImage.setImageBitmap(imageBitmap);
-//        }
-//
-////        else if(requestCode == REQUEST_CODE_GALLERY && resultCode == RESULT_OK && data != null){
-////            Uri uri = data.getData();
-////
-////            try {
-////                InputStream inputStream = getContentResolver().openInputStream(uri);
-////
-////                Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-////                productImage.setImageBitmap(bitmap);
-////
-////            } catch (FileNotFoundException e) {
-////                e.printStackTrace();
-////            }
-////        }
-////
-////        super.onActivityResult(requestCode, resultCode, data);
-//    }
-////-----------------------------ADD THE PHOTO TO A GALLERY-------------------------------------------
-////    The following example method demonstrates how to invoke the system's media scanner to add your
-////    photo to the Media Provider's database, making it available in the Android Gallery application
-////    and to other apps.
-//
-//    private void galleryAddPic() {
-//        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//        File f = new File(mCurrentPhotoPath);
-//        Uri contentUri = Uri.fromFile(f);
-//        mediaScanIntent.setData(contentUri);
-//        this.sendBroadcast(mediaScanIntent);
-//    }
-//
-//    //-----------------------------DECODE A SCALED IMAGE------------------------------------------------
-//    private void setPic() {
-//        // Get the dimensions of the View
-//        int targetW = productImage.getWidth();
-//        int targetH = productImage.getHeight();
-//
-//        // Get the dimensions of the bitmap
-//        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-//        bmOptions.inJustDecodeBounds = true;
-//        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-//        int photoW = bmOptions.outWidth;
-//        int photoH = bmOptions.outHeight;
-//
-//        // Determine how much to scale down the image
-//        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
-//
-//        // Decode the image file into a Bitmap sized to fill the View
-//        bmOptions.inJustDecodeBounds = false;
-//        bmOptions.inSampleSize = scaleFactor;
-//        bmOptions.inPurgeable = true;
-//
-//        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-//        productImage.setImageBitmap(bitmap);
-//    }
-
-
+//-----------------------------LOADER SET UP FINISHED-----------------------------------------------
 }
