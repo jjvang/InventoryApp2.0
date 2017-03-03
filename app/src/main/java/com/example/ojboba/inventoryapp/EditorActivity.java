@@ -368,7 +368,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         mQuantityTextView.setText("" + number);
     }
 
-
 //---------------------------CREATE MENU ITEM-------------------------------------------------------
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
